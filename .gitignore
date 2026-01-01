@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local databases
+*.db
+
+# Models / cache
+.offload/
+.cache/
+huggingface/
+
+# OS
+.DS_Store
+Thumbs.db
