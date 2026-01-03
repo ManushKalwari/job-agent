@@ -14,19 +14,19 @@ class LocalLLM:
         self.model = AutoModelForCausalLM.from_pretrained(
             MODEL_ID,
             device_map="cpu",
-            torch_dtype="auto",
+            dtype="auto",
             low_cpu_mem_usage=True,
             trust_remote_code=True
         )
 
         self.model.eval()
 
-    def generate(self, messages, max_new_tokens=350) -> str:
+    def generate(self, messages, max_new_tokens=500) -> str:
         """
         messages: list[dict] with roles (system/user)
         """
 
-        # 🔑 Convert chat messages → single text prompt
+        # Convert chat messages → single text prompt
         text = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
@@ -51,10 +51,8 @@ class LocalLLM:
                 eos_token_id=self.tokenizer.eos_token_id,
             )
 
-        # 🔑 Strip the prompt from the output
-        generated = outputs[0][inputs.input_ids.shape[-1]:]
 
         return self.tokenizer.decode(
-            generated,
+            outputs[0][inputs.input_ids.shape[-1]:], # Strip the prompt from the output
             skip_special_tokens=True
         )

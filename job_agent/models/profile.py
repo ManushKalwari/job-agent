@@ -6,4 +6,4 @@ from typing import List
 class UserProfile:
     target_roles: List[str]
     core_skills: List[str]
-    exclude_keywords: List[str]
+    location: List[str]
