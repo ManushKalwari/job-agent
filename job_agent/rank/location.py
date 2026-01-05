@@ -2,7 +2,8 @@ import pandas as pd
 import re
 from pathlib import Path
 
-LOCATIONS_PATH = "../uscities.csv"
+LOCATIONS_PATH = "job_agent/data/uscities.csv"
+
 
 def normalize(text: str) -> str:
     text = text.lower()

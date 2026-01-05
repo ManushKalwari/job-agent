@@ -150,3 +150,39 @@ class JobStore:
             ).fetchone()
 
         return row[0] if row else None
+    
+
+
+
+    def load_job(self, job_id: str) -> JobPosting | None:
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT job_id, company, title, location,
+                    description, apply_url, posted_date, source
+                FROM jobs
+                WHERE job_id = ?
+                """,
+                (job_id,),
+            ).fetchone()
+
+        if not row:
+            return None
+
+        posted_date = (
+            datetime.fromisoformat(row[6]).date()
+            if row[6]
+            else None
+        )
+
+        return JobPosting(
+            job_id=row[0],
+            company=row[1],
+            title=row[2],
+            location=row[3],
+            description=row[4],
+            apply_url=row[5],
+            posted_date=posted_date,
+            source=row[7],
+        )
+
