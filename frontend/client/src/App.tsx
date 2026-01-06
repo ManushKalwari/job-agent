@@ -40,18 +40,31 @@ function App() {
   // Generate cover letters
   // -------------------------
   const generateCoverLetters = async () => {
+
+
+    console.log("CLICKED generateCoverLetters");
+    console.log("resumeFile =", resumeFile);
+
+    if (!resumeFile) {
+      alert("Upload your resume PDF first");
+      return;
+    }
+
     if (selectedJobs.size === 0) {
       alert("Select at least one job");
       return;
     }
 
+    const form = new FormData();
+    form.append("resume", resumeFile);
+
+    selectedJobs.forEach((id) => {
+      form.append("job_ids", id);
+    });
+
     const res = await fetch("http://127.0.0.1:8000/jobs/cover-letter", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        job_ids: Array.from(selectedJobs),
-        resume_text: resumeText,
-      }),
+      body: form, // ❗ no headers
     });
 
     if (!res.ok) {
@@ -61,7 +74,7 @@ function App() {
 
     const files: { filename: string }[] = await res.json();
 
-    files.forEach(f => {
+    files.forEach((f) => {
       window.open(`http://127.0.0.1:8000/files/${f.filename}`, "_blank");
     });
   };
